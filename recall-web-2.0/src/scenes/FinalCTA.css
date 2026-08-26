@@ -1,0 +1,102 @@
+/* ════════════════════════════════════════════════════════════════════════
+   FINAL CTA SCENE
+   ════════════════════════════════════════════════════════════════════════ */
+
+.cta {
+  padding: 10rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+  position: relative;
+}
+
+.cta__glow-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 24rem;
+  background: linear-gradient(to top, rgba(255, 116, 103, 0.05), transparent);
+  pointer-events: none;
+  z-index: var(--z-bg);
+}
+
+.cta__glow-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 116, 103, 0.08) 0%, rgba(255, 116, 103, 0.02) 40%, transparent 70%);
+  pointer-events: none;
+  z-index: var(--z-bg);
+  animation: pulse-soft 6s infinite alternate ease-in-out;
+}
+
+.cta__ghost-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(8rem, 20vw, 20rem);
+  color: var(--cream);
+  opacity: 0.015;
+  letter-spacing: -0.05em;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  z-index: var(--z-bg);
+}
+
+.cta__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-xl);
+  max-width: 800px;
+}
+
+.cta__title {
+  color: var(--cream);
+  font-size: clamp(3rem, 5vw, 5rem);
+}
+
+.cta__subtitle {
+  font-size: var(--text-xl);
+  max-width: 600px;
+}
+
+.cta__actions {
+  display: flex;
+  gap: var(--space-md);
+  margin-top: var(--space-sm);
+}
+
+.cta__btn-start {
+  padding: 1.25rem 3rem;
+  font-size: var(--text-lg);
+}
+
+.cta__footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  margin-top: var(--space-2xl);
+}
+
+@media (max-width: 640px) {
+  .cta__actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .cta__actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

@@ -1,0 +1,129 @@
+/* ════════════════════════════════════════════════════════════════════════
+   HOW IT WORKS SCENE
+   ════════════════════════════════════════════════════════════════════════ */
+
+.how-it-works {
+  padding: var(--space-3xl) 0;
+}
+
+.how-it-works__inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+}
+
+.how-it-works__header {
+  text-align: center;
+}
+
+.how-it-works__title {
+  color: var(--cream);
+  font-size: var(--text-5xl);
+  margin-top: var(--space-sm);
+}
+
+.how-it-works__timeline {
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--space-xl) 0;
+}
+
+.how-it-works__path-bg,
+.how-it-works__path-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  transform: translateX(-50%);
+}
+
+.how-it-works__path-bg {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.how-it-works__path-fill {
+  background: linear-gradient(to bottom, var(--lavender), var(--coral));
+  box-shadow: 0 0 15px var(--lavender-dim);
+}
+
+.how-it-works__steps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+  position: relative;
+  z-index: 10;
+}
+
+.how-it-works__step {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 50%;
+}
+
+.how-it-works__step:nth-child(odd) {
+  left: 50%;
+  padding-left: var(--space-xl);
+}
+
+.how-it-works__step:nth-child(even) {
+  left: 0;
+  padding-right: var(--space-xl);
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.how-it-works__node {
+  position: absolute;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--lavender);
+  transform: translateY(-50%);
+  box-shadow: 0 0 10px var(--lavender-dim);
+  z-index: 20;
+}
+
+.how-it-works__step:nth-child(odd) .how-it-works__node {
+  left: -6px;
+}
+
+.how-it-works__step:nth-child(even) .how-it-works__node {
+  right: -6px;
+}
+
+.how-it-works__card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.how-it-works__card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(169, 139, 255, 0.3);
+}
+
+@media (max-width: 768px) {
+  .how-it-works__path-bg,
+  .how-it-works__path-fill {
+    left: 20px;
+  }
+  
+  .how-it-works__step {
+    width: 100%;
+    left: 0 !important;
+    padding-left: 60px !important;
+    padding-right: 0 !important;
+    justify-content: flex-start !important;
+    text-align: left !important;
+  }
+  
+  .how-it-works__node {
+    left: 14px !important;
+  }
+}
