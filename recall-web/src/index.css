@@ -1,0 +1,147 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-display: 'Space Grotesk', 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  
+  --color-coral: #FF786B;
+  --color-hot-coral: #FF4D5A;
+  --color-soft-coral: #FF9A92;
+  --color-gold: #F2C861;
+  --color-aqua: #73CFC5;
+  --color-lavender: #A88CFF;
+  --color-electric-blue: #5CA8FF;
+}
+
+@layer base {
+  :root {
+    --bg-base: #050507;
+    --bg-surface: #0B0D12;
+    --bg-elevated: #10131A;
+    --bg-card: #10131A;
+    --border-subtle: rgba(255, 255, 255, 0.10);
+    --border-accent: rgba(255, 255, 255, 0.20);
+    
+    --text-primary: #F7F5F1;
+    --text-secondary: #A9AFBD;
+    --text-muted: #687286;
+    
+    --accent-coral: #FF786B;
+    --accent-aqua: #73CFC5;
+    --accent-gold: #F2C861;
+    --accent-lavender: #A88CFF;
+  }
+
+  body {
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+    selection-background-color: var(--accent-coral);
+    selection-color: var(--text-primary);
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--bg-base);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--border-subtle);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--border-accent);
+  }
+}
+
+/* Kinetic Grid & Constellation visuals */
+.kinetic-grid-bg {
+  background-image: 
+    radial-gradient(circle at 50% 50%, rgba(255, 107, 97, 0.05) 0%, transparent 60%),
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 100% 100%, 48px 48px, 48px 48px;
+}
+
+.radar-sweep {
+  background: conic-gradient(from 0deg at 50% 50%, rgba(255, 107, 97, 0.15) 0deg, transparent 60deg, transparent 360deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Auth Container Animations */
+.auth-container-wrapper.active .sign-in {
+    transform: translateX(100%);
+}
+
+.auth-container-wrapper.active .sign-up {
+    transform: translateX(100%);
+    opacity: 1;
+    z-index: 5;
+    animation: move 0.6s;
+}
+
+@keyframes move {
+    0%, 49.99% {
+        opacity: 0;
+        z-index: 1;
+    }
+    50%, 100% {
+        opacity: 1;
+        z-index: 5;
+    }
+}
+
+.auth-container-wrapper.active .toggle-container {
+    transform: translateX(-100%);
+    border-radius: 0 30px 30px 0;
+}
+
+.auth-container-wrapper.active .toggle {
+    transform: translateX(50%);
+}
+
+.toggle-left {
+    transform: translateX(-200%);
+}
+
+.auth-container-wrapper.active .toggle-left {
+    transform: translateX(0);
+}
+
+.toggle-right {
+    right: 0;
+    transform: translateX(0);
+}
+
+.auth-container-wrapper.active .toggle-right {
+    transform: translateX(200%);
+}
+
+/* Additional Auth Animations & Overrides */
+.auth-container-wrapper.active .toggle-container {
+    border-radius: 0 100px 100px 0 !important;
+}
+.auth-container-wrapper .toggle-container {
+    border-radius: 100px 0 0 100px;
+}
+html { scroll-behavior: smooth; }
+
+@keyframes grain-shift {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-8px, 4px); }
+  50% { transform: translate(4px, -8px); }
+  75% { transform: translate(-4px, -4px); }
+  100% { transform: translate(0, 0); }
+}
