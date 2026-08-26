@@ -38,6 +38,8 @@ export const DiagnosticPage: React.FC = () => {
   const [resultJSON, setResultJSON] = useState<DiagnosticResultJSON | null>(null);
   const [showJSONPreview, setShowJSONPreview] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [aiResponse, setAiResponse] = useState<any>(null);
 
   useEffect(() => {
     const subjectQuestions = DIAGNOSTIC_QUESTIONS.filter(q => q.subject_id === subjectId);
@@ -78,7 +80,7 @@ export const DiagnosticPage: React.FC = () => {
     }
   };
 
-  const submitDiagnostic = () => {
+  const submitDiagnostic = async () => {
     const quiz_responses: QuizResponse[] = questions.map(q => {
       const selected = responses[q.question_id] || '';
       return {
@@ -104,10 +106,27 @@ export const DiagnosticPage: React.FC = () => {
     };
 
     setResultJSON(payload);
+    setIsAnalyzing(true);
     setStage('result');
 
-    // Mark as completed in frontend state
-    localStorage.setItem(`diagnostic_completed_${subjectId}`, 'true');
+    try {
+      // 🚀 Send JSON directly to your Flask server!
+      const res = await fetch('http://localhost:5000/api/agent/evaluate-and-teach', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        setAiResponse(data.data);
+      }
+    } catch (error) {
+      console.error('Error connecting to Flask backend:', error);
+    } finally {
+      setIsAnalyzing(false);
+      localStorage.setItem(`diagnostic_completed_${subjectId}`, 'true');
+    }
   };
 
   const handleCopyJSON = () => {
@@ -267,7 +286,7 @@ export const DiagnosticPage: React.FC = () => {
           )}
 
           {/* RESULT STAGE */}
-          {stage === 'result' && resultJSON && (
+          {stage === 'result' && (
             <motion.div
               key="result"
               initial={{ opacity: 0, y: 20 }}
@@ -276,41 +295,57 @@ export const DiagnosticPage: React.FC = () => {
             >
               <div className="absolute top-0 left-0 right-0 h-1 bg-[#0F766E]" />
               
-              <div className="w-20 h-20 bg-teal-50 rounded-full flex items-center justify-center mx-auto mb-6 border-4 border-white shadow-sm">
-                <CheckCircle2 className="h-10 w-10 text-teal-600" />
-              </div>
-              
-              <h1 className="text-2xl font-extrabold text-[#0F172A] mb-1">
-                Diagnostic complete.
-              </h1>
-              
-              <div className="my-6 py-6 border-y border-slate-100">
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Score</p>
-                <div className="text-4xl font-extrabold text-[#0F766E]">
-                  {resultJSON.score} <span className="text-slate-300 text-2xl">/ 5</span>
+              {isAnalyzing ? (
+                <div className="py-12 space-y-4">
+                  <div className="w-12 h-12 border-4 border-teal-600 border-t-transparent rounded-full animate-spin mx-auto" />
+                  <h2 className="text-lg font-bold text-[#0F172A]">AI Agent Evaluation in Progress...</h2>
+                  <p className="text-xs text-slate-500">Analyzing responses and building your skill level profile.</p>
                 </div>
-              </div>
-              
-              <p className="text-slate-600 mb-8 text-sm font-medium">
-                Recall will use your responses to tailor your learning experience. Your personalized path is being prepared.
-              </p>
-              
-              <div className="space-y-3">
-                <button
-                  onClick={() => navigate(returnTo)}
-                  className="w-full bg-[#0F172A] hover:bg-slate-800 text-white font-bold py-3.5 px-6 rounded-2xl transition shadow-sm hover:-translate-y-0.5"
-                >
-                  Continue to Course
-                </button>
-                
-                <button
-                  onClick={() => setShowJSONPreview(true)}
-                  className="w-full flex items-center justify-center gap-2 bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold py-3.5 px-6 rounded-2xl transition border border-slate-200 text-xs"
-                >
-                  <Code className="h-4 w-4" />
-                  View Diagnostic JSON (Developer)
-                </button>
-              </div>
+              ) : (
+                <>
+                  <div className="w-20 h-20 bg-teal-50 rounded-full flex items-center justify-center mx-auto mb-6 border-4 border-white shadow-sm">
+                    <CheckCircle2 className="h-10 w-10 text-teal-600" />
+                  </div>
+                  
+                  <h1 className="text-2xl font-extrabold text-[#0F172A] mb-1">
+                    Diagnostic Complete
+                  </h1>
+
+                  {aiResponse?.assessment?.level && (
+                    <div className="mt-2 inline-block bg-teal-100 text-[#0F766E] font-bold text-xs px-3 py-1 rounded-full uppercase tracking-wider">
+                      Assessed Level: {aiResponse.assessment.level}
+                    </div>
+                  )}
+                  
+                  <div className="my-6 py-6 border-y border-slate-100">
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Score</p>
+                    <div className="text-4xl font-extrabold text-[#0F766E]">
+                      {resultJSON?.score} <span className="text-slate-300 text-2xl">/ 5</span>
+                    </div>
+                  </div>
+                  
+                  <p className="text-slate-600 mb-8 text-sm font-medium">
+                    Your baseline level has been stored.
+                  </p>
+                  
+                  <div className="space-y-3">
+                    <button
+                      onClick={() => navigate(returnTo)}
+                      className="w-full bg-[#0F172A] hover:bg-slate-800 text-white font-bold py-3.5 px-6 rounded-2xl transition shadow-sm hover:-translate-y-0.5"
+                    >
+                      Continue to Course
+                    </button>
+                    
+                    <button
+                      onClick={() => setShowJSONPreview(true)}
+                      className="w-full flex items-center justify-center gap-2 bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold py-3.5 px-6 rounded-2xl transition border border-slate-200 text-xs"
+                    >
+                      <Code className="h-4 w-4" />
+                      View Diagnostic JSON (Developer)
+                    </button>
+                  </div>
+                </>
+              )}
             </motion.div>
           )}
 

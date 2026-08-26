@@ -1,0 +1,23 @@
+{
+  "name": "recall",
+  "version": "1.0.0",
+  "description": "Make sure the following are installed on your system:",
+  "main": "index.js",
+  "scripts": {
+    "dev:backend": "python recall-agent/main.py",
+    "dev:frontend": "npm run dev --prefix recall-web-2.0",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adityagadge-dev/Recall.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/adityagadge-dev/Recall/issues"
+  },
+  "homepage": "https://github.com/adityagadge-dev/Recall#readme"
+}

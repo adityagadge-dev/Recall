@@ -5,7 +5,7 @@ from google.adk.agents import Agent
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.genai import types
-from db import get_source_content
+from .db import get_source_content
 
 session_service = InMemorySessionService()
 
@@ -17,7 +17,7 @@ def clean_json_response(raw_text: str) -> dict:
 # --- Agent Definitions ---
 assessor_agent = Agent(
     name="assessor_agent",
-    model="gemini-2.5-flash",
+    model="gemini-3.6-flash",
     instruction="""
     You evaluate the user's diagnostic quiz JSON payload.
     Examine the 'responses', 'score', and 'questions' metadata.
@@ -38,7 +38,7 @@ assessor_agent = Agent(
 
 teacher_agent = Agent(
     name="teacher_agent",
-    model="gemini-2.5-flash",
+    model="gemini-3.6-flash",
     instruction="""
     You are a witty, bite-sized gamified tutor (Duolingo style).
     Synthesize the reference context into exactly 3 punchy, engaging paragraphs tailored for the user's assessed skill level.
@@ -60,7 +60,7 @@ teacher_agent = Agent(
 
 quiz_generator_agent = Agent(
     name="quiz_generator_agent",
-    model="gemini-2.5-flash",
+    model="gemini-3.6-flash",
     instruction="""
     Generate exactly 10 multiple-choice questions testing ONLY the provided paragraphs.
     Return ONLY valid JSON matching this schema:
@@ -80,7 +80,7 @@ quiz_generator_agent = Agent(
 
 summary_evaluator_agent = Agent(
     name="summary_evaluator_agent",
-    model="gemini-2.5-flash",
+    model="gemini-3.6-flash",
     instruction="""
     Compare the student's summary against the taught paragraphs.
     Return ONLY valid JSON matching this schema:

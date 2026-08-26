@@ -38,6 +38,8 @@ export const DiagnosticPage: React.FC = () => {
   const [resultJSON, setResultJSON] = useState<DiagnosticResultJSON | null>(null);
   const [showJSONPreview, setShowJSONPreview] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [aiResponse, setAiResponse] = useState<any>(null);
 
   useEffect(() => {
     const subjectQuestions = DIAGNOSTIC_QUESTIONS.filter(q => q.subject_id === subjectId);
@@ -78,7 +80,7 @@ export const DiagnosticPage: React.FC = () => {
     }
   };
 
-  const submitDiagnostic = () => {
+  const submitDiagnostic = async () => {
     const quiz_responses: QuizResponse[] = questions.map(q => {
       const selected = responses[q.question_id] || '';
       return {
@@ -104,10 +106,27 @@ export const DiagnosticPage: React.FC = () => {
     };
 
     setResultJSON(payload);
+    setIsAnalyzing(true);
     setStage('result');
 
-    // Mark as completed in frontend state
-    localStorage.setItem(`diagnostic_completed_${subjectId}`, 'true');
+    try {
+      // 🚀 Send JSON directly to your Flask server!
+      const res = await fetch('http://localhost:5000/api/agent/evaluate-and-teach', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        setAiResponse(data.data);
+      }
+    } catch (error) {
+      console.error('Error connecting to Flask backend:', error);
+    } finally {
+      setIsAnalyzing(false);
+      localStorage.setItem(`diagnostic_completed_${subjectId}`, 'true');
+    }
   };
 
   const handleCopyJSON = () => {
@@ -121,7 +140,7 @@ export const DiagnosticPage: React.FC = () => {
   const progressPercentage = ((currentIndex + 1) / questions.length) * 100;
 
   return (
-    <div className="min-h-screen bg-[#07080C] flex flex-col font-sans relative">
+    <div className="min-h-screen bg-[#F0FDFA] flex flex-col font-sans relative">
       <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-8">
         <AnimatePresence mode="wait">
           
@@ -132,18 +151,18 @@ export const DiagnosticPage: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="max-w-md w-full bg-[#11151F] rounded-3xl p-8 shadow-sm border border-[#323B4E] text-center"
+              className="max-w-md w-full bg-white rounded-3xl p-8 shadow-sm border border-slate-200 text-center"
             >
-              <div className="w-16 h-16 bg-teal-900/20 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-teal-100">
+              <div className="w-16 h-16 bg-teal-50 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-teal-100">
                 <ShieldCheck className="h-8 w-8 text-teal-600" />
               </div>
               <span className="text-xs font-bold uppercase tracking-wider text-teal-600 mb-2 block">
                 {subjectName}
               </span>
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-[#F7F8FC] mb-3">
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A] mb-3">
                 Let's understand your level first.
               </h1>
-              <p className="text-[#9AA4B8] mb-8 text-sm leading-relaxed">
+              <p className="text-slate-500 mb-8 text-sm leading-relaxed">
                 Answer 5 quick questions so Recall can tailor your learning experience. There are no penalties, so answer honestly to help us personalize the course just for you.
               </p>
               <button
@@ -167,14 +186,14 @@ export const DiagnosticPage: React.FC = () => {
             >
               <div className="mb-8">
                 <div className="flex items-center justify-between mb-3">
-                  <h2 className="text-sm font-bold text-[#9AA4B8] uppercase tracking-wider">
-                    {subjectName} <span className="mx-2 text-[#687286]">•</span> 5-question diagnostic
+                  <h2 className="text-sm font-bold text-slate-500 uppercase tracking-wider">
+                    {subjectName} <span className="mx-2 text-slate-300">•</span> 5-question diagnostic
                   </h2>
                   <span className="text-sm font-bold text-[#0F766E]">
                     {currentIndex + 1} / {questions.length}
                   </span>
                 </div>
-                <div className="w-full bg-[#1A2030] rounded-full h-1.5 overflow-hidden">
+                <div className="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
                   <motion.div
                     className="bg-[#0F766E] h-1.5 rounded-full"
                     initial={{ width: 0 }}
@@ -184,8 +203,8 @@ export const DiagnosticPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="bg-[#11151F] rounded-3xl p-6 sm:p-10 shadow-sm border border-[#323B4E] mb-6">
-                <h3 className="text-xl sm:text-2xl font-extrabold text-[#F7F8FC] mb-8 leading-snug">
+              <div className="bg-white rounded-3xl p-6 sm:p-10 shadow-sm border border-slate-200 mb-6">
+                <h3 className="text-xl sm:text-2xl font-extrabold text-[#0F172A] mb-8 leading-snug">
                   {currentQuestion.question_text}
                 </h3>
                 
@@ -199,16 +218,16 @@ export const DiagnosticPage: React.FC = () => {
                         onClick={() => handleSelectOption(option)}
                         className={`w-full text-left p-4 rounded-2xl border-2 transition-all duration-200 active:scale-[0.99] hover:-translate-y-0.5 flex items-center gap-4 group ${
                           isSelected
-                            ? 'border-[#0F766E] bg-[#07080C]'
-                            : 'border-[#1A2030] bg-[#11151F] hover:border-teal-200 hover:bg-[#0D1017]'
+                            ? 'border-[#0F766E] bg-[#F0FDFA]'
+                            : 'border-slate-100 bg-white hover:border-teal-200 hover:bg-slate-50'
                         }`}
                       >
                         <div className={`flex items-center justify-center w-8 h-8 rounded-xl font-bold text-sm shrink-0 transition-colors ${
-                          isSelected ? 'bg-[#0F766E] text-white' : 'bg-[#1A2030] text-[#9AA4B8] group-hover:bg-teal-900/40 group-hover:text-teal-400'
+                          isSelected ? 'bg-[#0F766E] text-white' : 'bg-slate-100 text-slate-500 group-hover:bg-teal-100 group-hover:text-teal-700'
                         }`}>
                           {letter}
                         </div>
-                        <span className={`text-sm font-medium ${isSelected ? 'text-[#F7F8FC]' : 'text-[#9AA4B8]'}`}>
+                        <span className={`text-sm font-medium ${isSelected ? 'text-[#0F172A]' : 'text-slate-600'}`}>
                           {option}
                         </span>
                       </button>
@@ -223,8 +242,8 @@ export const DiagnosticPage: React.FC = () => {
                   disabled={currentIndex === 0}
                   className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-bold text-sm transition ${
                     currentIndex === 0
-                      ? 'text-[#687286] cursor-not-allowed'
-                      : 'text-[#9AA4B8] hover:bg-[#1A2030] hover:text-[#F7F8FC]'
+                      ? 'text-slate-300 cursor-not-allowed'
+                      : 'text-slate-500 hover:bg-slate-200 hover:text-[#0F172A]'
                   }`}
                 >
                   <ChevronLeft className="h-4 w-4" />
@@ -241,7 +260,7 @@ export const DiagnosticPage: React.FC = () => {
                     disabled={!responses[currentQuestion.question_id]}
                     className={`flex items-center gap-2 px-6 py-3 rounded-2xl font-bold text-sm transition shadow-sm ${
                       !responses[currentQuestion.question_id]
-                        ? 'bg-[#1A2030] text-[#687286] cursor-not-allowed'
+                        ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
                         : 'bg-[#0F766E] text-white hover:bg-teal-700 hover:-translate-y-0.5'
                     }`}
                   >
@@ -254,7 +273,7 @@ export const DiagnosticPage: React.FC = () => {
                     disabled={!responses[currentQuestion.question_id]}
                     className={`flex items-center gap-2 px-6 py-3 rounded-2xl font-bold text-sm transition shadow-sm ${
                       !responses[currentQuestion.question_id]
-                        ? 'bg-[#1A2030] text-[#687286] cursor-not-allowed'
+                        ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
                         : 'bg-[#0F766E] text-white hover:bg-teal-700 hover:-translate-y-0.5'
                     }`}
                   >
@@ -267,50 +286,66 @@ export const DiagnosticPage: React.FC = () => {
           )}
 
           {/* RESULT STAGE */}
-          {stage === 'result' && resultJSON && (
+          {stage === 'result' && (
             <motion.div
               key="result"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="max-w-md w-full bg-[#11151F] rounded-3xl p-8 shadow-sm border border-[#323B4E] text-center relative overflow-hidden"
+              className="max-w-md w-full bg-white rounded-3xl p-8 shadow-sm border border-slate-200 text-center relative overflow-hidden"
             >
               <div className="absolute top-0 left-0 right-0 h-1 bg-[#0F766E]" />
               
-              <div className="w-20 h-20 bg-teal-900/20 rounded-full flex items-center justify-center mx-auto mb-6 border-4 border-[#323B4E] shadow-sm">
-                <CheckCircle2 className="h-10 w-10 text-teal-600" />
-              </div>
-              
-              <h1 className="text-2xl font-extrabold text-[#F7F8FC] mb-1">
-                Diagnostic complete.
-              </h1>
-              
-              <div className="my-6 py-6 border-y border-[#1A2030]">
-                <p className="text-xs font-bold text-[#687286] uppercase tracking-widest mb-2">Score</p>
-                <div className="text-4xl font-extrabold text-[#0F766E]">
-                  {resultJSON.score} <span className="text-[#687286] text-2xl">/ 5</span>
+              {isAnalyzing ? (
+                <div className="py-12 space-y-4">
+                  <div className="w-12 h-12 border-4 border-teal-600 border-t-transparent rounded-full animate-spin mx-auto" />
+                  <h2 className="text-lg font-bold text-[#0F172A]">AI Agent Evaluation in Progress...</h2>
+                  <p className="text-xs text-slate-500">Analyzing responses and building your skill level profile.</p>
                 </div>
-              </div>
-              
-              <p className="text-[#9AA4B8] mb-8 text-sm font-medium">
-                Recall will use your responses to tailor your learning experience. Your personalized path is being prepared.
-              </p>
-              
-              <div className="space-y-3">
-                <button
-                  onClick={() => navigate(returnTo)}
-                  className="w-full bg-[#0F172A] hover:bg-slate-800 text-white font-bold py-3.5 px-6 rounded-2xl transition shadow-sm hover:-translate-y-0.5"
-                >
-                  Continue to Course
-                </button>
-                
-                <button
-                  onClick={() => setShowJSONPreview(true)}
-                  className="w-full flex items-center justify-center gap-2 bg-[#0D1017] hover:bg-[#1A2030] text-[#9AA4B8] font-bold py-3.5 px-6 rounded-2xl transition border border-[#323B4E] text-xs"
-                >
-                  <Code className="h-4 w-4" />
-                  View Diagnostic JSON (Developer)
-                </button>
-              </div>
+              ) : (
+                <>
+                  <div className="w-20 h-20 bg-teal-50 rounded-full flex items-center justify-center mx-auto mb-6 border-4 border-white shadow-sm">
+                    <CheckCircle2 className="h-10 w-10 text-teal-600" />
+                  </div>
+                  
+                  <h1 className="text-2xl font-extrabold text-[#0F172A] mb-1">
+                    Diagnostic Complete
+                  </h1>
+
+                  {aiResponse?.assessment?.level && (
+                    <div className="mt-2 inline-block bg-teal-100 text-[#0F766E] font-bold text-xs px-3 py-1 rounded-full uppercase tracking-wider">
+                      Assessed Level: {aiResponse.assessment.level}
+                    </div>
+                  )}
+                  
+                  <div className="my-6 py-6 border-y border-slate-100">
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Score</p>
+                    <div className="text-4xl font-extrabold text-[#0F766E]">
+                      {resultJSON?.score} <span className="text-slate-300 text-2xl">/ 5</span>
+                    </div>
+                  </div>
+                  
+                  <p className="text-slate-600 mb-8 text-sm font-medium">
+                    Your baseline level has been stored.
+                  </p>
+                  
+                  <div className="space-y-3">
+                    <button
+                      onClick={() => navigate(returnTo)}
+                      className="w-full bg-[#0F172A] hover:bg-slate-800 text-white font-bold py-3.5 px-6 rounded-2xl transition shadow-sm hover:-translate-y-0.5"
+                    >
+                      Continue to Course
+                    </button>
+                    
+                    <button
+                      onClick={() => setShowJSONPreview(true)}
+                      className="w-full flex items-center justify-center gap-2 bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold py-3.5 px-6 rounded-2xl transition border border-slate-200 text-xs"
+                    >
+                      <Code className="h-4 w-4" />
+                      View Diagnostic JSON (Developer)
+                    </button>
+                  </div>
+                </>
+              )}
             </motion.div>
           )}
 
@@ -324,37 +359,37 @@ export const DiagnosticPage: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#07080C]/40 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm"
           >
             <motion.div
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="w-full max-w-2xl bg-[#11151F] rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]"
+              className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]"
             >
-              <div className="flex items-center justify-between p-4 border-b border-[#1A2030] bg-[#0D1017]">
-                <div className="flex items-center gap-2 text-[#9AA4B8] font-bold text-sm">
+              <div className="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50">
+                <div className="flex items-center gap-2 text-slate-600 font-bold text-sm">
                   <Code className="h-4 w-4" />
                   JSON Payload Output
                 </div>
                 <button
                   onClick={() => setShowJSONPreview(false)}
-                  className="text-[#687286] hover:text-[#9AA4B8] p-2 rounded-lg hover:bg-[#1A2030] transition"
+                  className="text-slate-400 hover:text-slate-600 p-2 rounded-lg hover:bg-slate-200 transition"
                 >
                   Close
                 </button>
               </div>
               
-              <div className="flex-1 overflow-auto p-4 bg-[#07080C]">
+              <div className="flex-1 overflow-auto p-4 bg-slate-900">
                 <pre className="text-[11px] sm:text-xs font-mono text-teal-300 leading-relaxed">
                   {JSON.stringify(resultJSON, null, 2)}
                 </pre>
               </div>
               
-              <div className="p-4 bg-[#0D1017] border-t border-[#1A2030]">
+              <div className="p-4 bg-slate-50 border-t border-slate-100">
                 <button
                   onClick={handleCopyJSON}
-                  className="w-full flex items-center justify-center gap-2 bg-[#11151F] border border-[#323B4E] hover:border-teal-300 text-[#F7F8FC] font-bold py-2.5 px-4 rounded-xl transition shadow-sm"
+                  className="w-full flex items-center justify-center gap-2 bg-white border border-slate-200 hover:border-teal-300 text-slate-700 font-bold py-2.5 px-4 rounded-xl transition shadow-sm"
                 >
                   {copied ? <Check className="h-4 w-4 text-teal-600" /> : <Copy className="h-4 w-4" />}
                   {copied ? 'Copied to Clipboard' : 'Copy JSON'}
