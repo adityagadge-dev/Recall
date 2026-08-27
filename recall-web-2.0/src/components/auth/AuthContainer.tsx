@@ -24,7 +24,7 @@ export const AuthContainer: React.FC<AuthContainerProps> = ({
   }, [initialActive]);
 
   return (
-    <div className={`auth-container-wrapper relative flex items-center justify-center min-h-[600px] w-full max-w-[850px] mx-auto bg-[#11151F] rounded-[30px] shadow-2xl overflow-hidden ${isActive ? 'active' : ''}`}>
+    <div className={`auth-container-wrapper relative flex items-center justify-center min-h-[550px] w-full max-w-[850px] mx-auto bg-[#11151F] rounded-[30px] shadow-2xl overflow-hidden ${isActive ? 'active' : ''}`}>
       
       {/* Sign Up */}
       <div className="form-container sign-up absolute top-0 left-0 w-1/2 h-full bg-[#11151F] flex flex-col justify-center items-center px-10 transition-all duration-600 ease-in-out opacity-0 z-10">

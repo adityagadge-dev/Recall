@@ -49,7 +49,7 @@ export default function HeroScene() {
               Learn the skills
             </AnimatedText>
             <AnimatedText mode="wordSlide" tag="div" className="hero__h1" delay={0.4}>
-              <span className="hero__accent">life</span> never
+              <span className="hero__accent">life  </span> never
             </AnimatedText>
             <AnimatedText mode="wordSlide" tag="div" className="hero__h1" delay={0.55}>
               taught you.
