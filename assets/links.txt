@@ -15,3 +15,6 @@ Link: https://raw.githubusercontent.com/adityagadge-dev/Recall/refs/heads/main/a
 
 recall_white
 Link: https://raw.githubusercontent.com/adityagadge-dev/Recall/refs/heads/main/assets/recall_white.png
+
+2d_model
+Link: https://raw.githubusercontent.com/adityagadge-dev/Recall/refs/heads/main/assets/model_0.png
