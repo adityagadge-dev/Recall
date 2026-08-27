@@ -103,12 +103,12 @@ export const StudentLayout: React.FC = () => {
           >
             <img
               src={user?.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80'}
-              alt={user?.name || 'Aria'}
+              alt={user?.name || 'User'}
               className="h-9 w-9 rounded-full border-2 border-[#FF6B61] object-cover"
             />
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-bold text-[#F7F8FC] truncate">{user?.name || 'Aria Chen'}</p>
-              <p className="text-xs text-[#9AA4B8] truncate">{user?.email || 'aria@recall.edu'}</p>
+              <p className="text-sm font-bold text-[#F7F8FC] truncate">{user?.name || 'User'}</p>
+              <p className="text-xs text-[#9AA4B8] truncate">{user?.email || ''}</p>
             </div>
           </Link>
           <button

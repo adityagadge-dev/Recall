@@ -79,7 +79,7 @@ export const StudentDashboardPage: React.FC = () => {
       <motion.div variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4 } } }} className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 border-b border-[#323B4E] pb-4">
         <div>
           <h2 className="text-xl sm:text-2xl font-extrabold text-[#F7F8FC]">
-            Welcome back, {user?.name || 'Aria'}
+            Welcome back, {user?.name || 'User'}
           </h2>
           <p className="text-sm text-[#9AA4B8] mt-1">
             You're on a <strong className="text-[#FF6B61]">{streakDays}-day learning streak</strong>. Keep building your skills.
