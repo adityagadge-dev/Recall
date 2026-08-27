@@ -1,0 +1,14 @@
+communication
+Link: https://raw.githubusercontent.com/adityagadge-dev/Recall/refs/heads/main/assets/communication.jpeg
+
+digital_safety
+Link: https://raw.githubusercontent.com/adityagadge-dev/Recall/refs/heads/main/assets/digital_safety.jpeg
+
+financial_literacy
+Link: https://raw.githubusercontent.com/adityagadge-dev/Recall/refs/heads/main/assets/financial_literacy.jpeg
+
+first_aid
+Link: https://raw.githubusercontent.com/adityagadge-dev/Recall/refs/heads/main/assets/first_aid.jpeg
+
+recall_logo
+Link: https://raw.githubusercontent.com/adityagadge-dev/Recall/refs/heads/main/assets/recall_logo.png
