@@ -9,12 +9,18 @@ export default function HeroScene() {
   const navigate = useNavigate();
 
   const handleStartJourney = () => {
-    navigate('/sign-in');
+    navigate('/sign-in', {
+      state: { initialActive: true, role: 'learner' },
+    });
   };
 
   const handleExploreWorlds = () => {
     const el = document.querySelector('#subjects');
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      navigate('/#subjects');
+    }
   };
 
   return (
@@ -73,11 +79,19 @@ export default function HeroScene() {
             transition={{ delay: 0.9, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             viewport={{ once: true }}
           >
-            <button className="btn btn--primary" id="hero-cta-start" onClick={handleStartJourney}>
+            <button
+              className="btn btn--primary"
+              id="hero-cta-start"
+              onClick={handleStartJourney}
+            >
               Start Your Journey
               <span className="btn__arrow">→</span>
             </button>
-            <button className="btn btn--ghost" id="hero-cta-explore" onClick={handleExploreWorlds}>
+            <button
+              className="btn btn--ghost"
+              id="hero-cta-explore"
+              onClick={handleExploreWorlds}
+            >
               Explore Worlds
             </button>
           </motion.div>
