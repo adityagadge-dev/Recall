@@ -56,7 +56,7 @@ export const LessonReader: React.FC<LessonReaderProps> = ({
   const handleCompleteLesson = () => {
     if (isCompleted) return;
     setIsCompleted(true);
-    addXp(lesson.xpReward, `Completed Lesson: ${lesson.title}`);
+    addXp(lesson?.xpReward || 50, `Completed Lesson: ${lesson?.title || 'Lesson'}`);
     triggerLevelUpConfetti();
     onComplete();
   };
@@ -71,13 +71,24 @@ export const LessonReader: React.FC<LessonReaderProps> = ({
     }, 2200);
   };
 
+  // Safe extractors for string vs object content structures
+  const contentObj = typeof lesson?.content === 'object' && lesson?.content !== null ? lesson.content : null;
+  const rawContentString = typeof lesson?.content === 'string' ? lesson.content : '';
+
+  const introduction = contentObj?.introduction || rawContentString || 'Welcome to this foundational lesson.';
+  const keyConcept = contentObj?.keyConcept || 'Core principles and mental models.';
+  const realWorldScenario = contentObj?.realWorldScenario || 'Practical application of this concept in real-world environments.';
+  const actionableTakeaways = contentObj?.actionableTakeaways || [];
+  const commonPitfalls = contentObj?.commonPitfalls || [];
+  const supportingResources = lesson?.supportingResources || [];
+
   return (
     <div id="lesson-reader-container" className="max-w-4xl mx-auto space-y-6">
       {/* Course and Module Breadcrumbs */}
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#323B4E] pb-4">
         <div>
-          <span className="text-xs font-mono font-bold text-[#0F766E] uppercase">{course.title}</span>
-          <h2 className="text-sm font-semibold text-[#9AA4B8] mt-0.5">{module.title}</h2>
+          <span className="text-xs font-mono font-bold text-[#0F766E] uppercase">{course?.title || 'Course'}</span>
+          <h2 className="text-sm font-semibold text-[#9AA4B8] mt-0.5">{module?.title || 'Module'}</h2>
         </div>
 
         <div className="flex items-center gap-2">
@@ -166,12 +177,12 @@ export const LessonReader: React.FC<LessonReaderProps> = ({
       {/* Lesson Header */}
       <div>
         <div className="flex items-center gap-2 mb-2 text-xs font-mono text-[#9AA4B8]">
-          <span>{lesson.durationMinutes} MIN READ</span>
+          <span>{lesson?.durationMinutes || '10'} MIN READ</span>
           <span>•</span>
-          <span className="text-[#0F766E] font-bold">+{lesson.xpReward} XP REWARD</span>
+          <span className="text-[#0F766E] font-bold">+{lesson?.xpReward || 50} XP REWARD</span>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-[#F7F8FC] tracking-tight">{lesson.title}</h1>
-        <p className="text-sm text-[#9AA4B8] mt-1">{lesson.subtitle}</p>
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-[#F7F8FC] tracking-tight">{lesson?.title || 'Lesson Title'}</h1>
+        {lesson?.subtitle && <p className="text-sm text-[#9AA4B8] mt-1">{lesson.subtitle}</p>}
       </div>
 
       {/* Notes Drawer (Expandable) */}
@@ -210,7 +221,7 @@ export const LessonReader: React.FC<LessonReaderProps> = ({
         <div className="rounded-2xl border border-[#323B4E] bg-[#0D1017] p-5 sm:p-6 space-y-2">
           <h3 className="text-sm font-bold uppercase tracking-wider text-[#9AA4B8]">1. Conceptual Primer</h3>
           <p className="text-sm sm:text-base leading-relaxed text-[#9AA4B8]">
-            {lesson.content.introduction}
+            {introduction}
           </p>
         </div>
 
@@ -221,23 +232,23 @@ export const LessonReader: React.FC<LessonReaderProps> = ({
             <span>Core Mathematical / Cognitive Mechanism</span>
           </div>
           <p className="text-sm sm:text-base font-medium text-[#F7F8FC] leading-relaxed">
-            {lesson.content.keyConcept}
+            {keyConcept}
           </p>
         </div>
 
         {/* Interactive Breakdown Simulator */}
-        {lesson.content.interactiveExample && (
+        {contentObj?.interactiveExample && (
           <div className="rounded-2xl border border-[#323B4E] bg-[#11151F] p-5 sm:p-6 space-y-4">
             <div className="flex items-center justify-between">
-              <h4 className="text-sm font-bold text-[#F7F8FC]">{lesson.content.interactiveExample.title}</h4>
+              <h4 className="text-sm font-bold text-[#F7F8FC]">{contentObj.interactiveExample.title}</h4>
               <span className="text-[10px] font-mono text-[#0F766E] bg-teal-50 px-2 py-0.5 rounded border border-teal-50">
                 Interactive Model
               </span>
             </div>
-            <p className="text-xs text-[#9AA4B8]">{lesson.content.interactiveExample.context}</p>
+            <p className="text-xs text-[#9AA4B8]">{contentObj.interactiveExample.context}</p>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-              {lesson.content.interactiveExample.breakdown.map((item, idx) => (
+              {contentObj.interactiveExample.breakdown?.map((item: any, idx: number) => (
                 <div key={idx} className="rounded-xl border border-[#323B4E] bg-[#0D1017] p-3.5 space-y-1">
                   <span className="text-[11px] font-bold text-[#9AA4B8] uppercase">{item.label}</span>
                   <div className="text-base font-extrabold font-mono bg-teal-500">{item.value}</div>
@@ -252,44 +263,48 @@ export const LessonReader: React.FC<LessonReaderProps> = ({
         <div className="rounded-2xl border border-[#323B4E] bg-[#0D1017] p-5 sm:p-6 space-y-2">
           <h3 className="text-sm font-bold uppercase tracking-wider text-[#0F766E]">2. Real-World Field Scenario</h3>
           <p className="text-sm leading-relaxed text-[#9AA4B8]">
-            {lesson.content.realWorldScenario}
+            {realWorldScenario}
           </p>
         </div>
 
         {/* Actionable Takeaways */}
-        <div className="rounded-2xl border border-[#323B4E] bg-[#0D1017] p-5 sm:p-6 space-y-3">
-          <h3 className="text-sm font-bold uppercase tracking-wider text-[#0F766E]">3. Actionable Tactical Protocols</h3>
-          <ul className="space-y-2">
-            {lesson.content.actionableTakeaways.map((takeaway, idx) => (
-              <li key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-[#9AA4B8]">
-                <CheckCircle2 className="h-4 w-4 text-[#0F766E] shrink-0 mt-0.5" />
-                <span>{takeaway}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+        {actionableTakeaways.length > 0 && (
+          <div className="rounded-2xl border border-[#323B4E] bg-[#0D1017] p-5 sm:p-6 space-y-3">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-[#0F766E]">3. Actionable Tactical Protocols</h3>
+            <ul className="space-y-2">
+              {actionableTakeaways.map((takeaway: string, idx: number) => (
+                <li key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-[#9AA4B8]">
+                  <CheckCircle2 className="h-4 w-4 text-[#0F766E] shrink-0 mt-0.5" />
+                  <span>{takeaway}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {/* Common Pitfalls */}
-        <div className="rounded-2xl border border-teal-600/25 bg-amber-950/10 p-5 sm:p-6 space-y-3">
-          <div className="flex items-center gap-2 text-teal-400 text-xs font-bold uppercase tracking-wider">
-            <AlertTriangle className="h-4 w-4" />
-            <span>Common Cognitive Pitfalls to Avoid</span>
+        {commonPitfalls.length > 0 && (
+          <div className="rounded-2xl border border-teal-600/25 bg-amber-950/10 p-5 sm:p-6 space-y-3">
+            <div className="flex items-center gap-2 text-teal-400 text-xs font-bold uppercase tracking-wider">
+              <AlertTriangle className="h-4 w-4" />
+              <span>Common Cognitive Pitfalls to Avoid</span>
+            </div>
+            <ul className="space-y-2">
+              {commonPitfalls.map((pitfall: string, idx: number) => (
+                <li key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-[#9AA4B8]">
+                  <span className="h-1.5 w-1.5 rounded-full bg-teal-400 shrink-0 mt-2" />
+                  <span>{pitfall}</span>
+                </li>
+              ))}
+            </ul>
           </div>
-          <ul className="space-y-2">
-            {lesson.content.commonPitfalls.map((pitfall, idx) => (
-              <li key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-[#9AA4B8]">
-                <span className="h-1.5 w-1.5 rounded-full bg-teal-400 shrink-0 mt-2" />
-                <span>{pitfall}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+        )}
 
         {/* Grounded Research Attribution */}
-        {lesson.supportingResources.length > 0 && (
+        {supportingResources.length > 0 && (
           <div className="rounded-xl border border-[#323B4E] bg-[#11151F] p-4 text-xs space-y-2">
             <span className="font-bold uppercase tracking-wider text-[#9AA4B8] text-[10px]">Verified Knowledge Grounding:</span>
-            {lesson.supportingResources.map((res, i) => (
+            {supportingResources.map((res: any, i: number) => (
               <a
                 key={i}
                 href={res.url}
