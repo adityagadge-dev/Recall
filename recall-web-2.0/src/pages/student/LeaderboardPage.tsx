@@ -133,12 +133,12 @@ export const ProfilePage: React.FC = () => {
         <div className="flex flex-col sm:flex-row items-center gap-6">
           <img
             src={user?.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=160&auto=format&fit=crop&q=80'}
-            alt={user?.name || 'Aria'}
+            alt={user?.name || 'User'}
             className="h-24 w-24 rounded-full border-2 border-[#0F766E]/50 object-cover shadow-xl"
           />
           <div className="space-y-2 text-center sm:text-left flex-1">
             <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
-              <h1 className="text-2xl font-extrabold text-[#F7F8FC]">{user?.name || 'Aria Chen'}</h1>
+              <h1 className="text-2xl font-extrabold text-[#F7F8FC]">{user?.name || 'User'}</h1>
               <span className="rounded-md bg-teal-50 px-2 py-0.5 text-xs font-bold text-[#0F766E] border border-teal-50">
                 Level {level} {levelTitle}
               </span>

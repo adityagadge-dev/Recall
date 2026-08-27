@@ -147,11 +147,24 @@ const ClerkLearnerSignIn: React.FC = () => {
 
 // -- Learner Mock Component --
 const MockLearnerSignIn: React.FC = () => {
-  const { login } = useAuth();
+  const { signIn } = useAuth();
   const navigate = useNavigate();
 
-  const handleSignIn = (e: React.FormEvent) => { e.preventDefault(); login('learner'); navigate('/app'); };
-  const handleSignUp = (e: React.FormEvent) => { e.preventDefault(); login('learner'); navigate('/app'); };
+  const handleSignIn = async (e: React.FormEvent, data: any) => {
+    e.preventDefault();
+
+    await signIn(data.email, 'learner');
+
+    navigate('/app');
+  };
+
+  const handleSignUp = async (e: React.FormEvent, data: any) => {
+    e.preventDefault();
+
+    await signIn(data.email, 'learner');
+
+    navigate('/app');
+  };
 
   return (
     <div className="min-h-screen bg-[#07080C] flex items-center justify-center py-12 px-4 relative overflow-hidden">
