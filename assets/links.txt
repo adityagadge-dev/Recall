@@ -12,3 +12,6 @@ Link: https://raw.githubusercontent.com/adityagadge-dev/Recall/refs/heads/main/a
 
 recall_logo
 Link: https://raw.githubusercontent.com/adityagadge-dev/Recall/refs/heads/main/assets/recall_logo.png
+
+recall_white
+Link: https://raw.githubusercontent.com/adityagadge-dev/Recall/refs/heads/main/assets/recall_white.png
