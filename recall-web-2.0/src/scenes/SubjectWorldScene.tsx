@@ -2,6 +2,7 @@ import { motion } from 'motion/react';
 import AnimatedText from '../components/visuals/CinematicAnimatedText';
 import { HorizontalCarousel } from '../components/visuals/HorizontalCarousel';
 import './SubjectWorldScene.css';
+import { SubjectCarousel } from '../components/landing/SubjectCarousel';
 
 const subjects = [
   { id: 'finance', title: 'Financial Literacy', description: 'Build your money instincts. Master budgeting, saving, and smart credit decisions.', skills: ['Budgeting', 'Saving', 'Banking', 'Credit'], image: '/financial literacy.jpeg', color: '#FFD166', route: '/subjects/financial-literacy' },
@@ -37,7 +38,7 @@ export default function SubjectWorldScene() {
           viewport={{ once: true }}
           className="worlds__carousel-wrapper"
         >
-          <HorizontalCarousel cards={subjects} />
+          <SubjectCarousel/>
         </motion.div>
 
       </div>
