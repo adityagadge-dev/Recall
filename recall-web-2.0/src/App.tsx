@@ -89,7 +89,7 @@ export const App: React.FC = () => {
                 <Route index element={<StudentDashboardPage />} />
                 <Route path="subjects" element={<SubjectsShowcasePage />} />
                 <Route path="subjects/:slug" element={<SubjectDetailsPage />} />
-                <Route path="diagnostic/:subjectId" element={<DiagnosticPage />} />
+                <Route path="diagnostic/:subject_id" element={<DiagnosticPage />} />
                 <Route path="learning/:courseId" element={<CourseLearningPage />} />
                 <Route path="quiz/:quizId" element={<QuizPage />} />
                 <Route path="spin-teach" element={<SpinTeachPage />} />

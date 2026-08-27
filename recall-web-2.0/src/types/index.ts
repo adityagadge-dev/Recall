@@ -52,6 +52,7 @@ export type SubjectCategory = 'finance' | 'digital_safety' | 'first_aid' | 'comm
 
 export interface Subject {
   id: string;
+  _id?: string;
   slug: string;
   title: string;
   tagline: string;
