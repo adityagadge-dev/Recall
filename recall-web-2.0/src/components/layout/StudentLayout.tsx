@@ -112,12 +112,15 @@ export const StudentLayout: React.FC = () => {
             </div>
           </Link>
           <button
-            onClick={signOut}
-            className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-xs font-bold text-[#9AA4B8] transition hover:bg-[#FF4D5A]/10 hover:text-[#FF4D5A]"
-          >
-            <LogOut className="h-4 w-4" />
-            <span>Sign Out</span>
-          </button>
+  onClick={async () => {
+    await signOut();
+    navigate('/auth');
+  }}
+  className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-xs font-bold text-[#9AA4B8] transition hover:bg-[#FF4D5A]/10 hover:text-[#FF4D5A]"
+>
+  <LogOut className="h-4 w-4" />
+  <span>Sign Out</span>
+</button>
         </div>
       </motion.aside>
 

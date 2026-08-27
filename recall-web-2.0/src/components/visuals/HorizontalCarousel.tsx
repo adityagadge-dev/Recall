@@ -80,7 +80,7 @@ export const HorizontalCarousel: React.FC<HorizontalCarouselProps> = ({ cards })
             const isActive = offset === 0;
             const zIndex = isActive ? 10 : 5 - Math.abs(offset);
             const scale = isActive ? 1 : 0.85;
-            const x = offset * 320; // Distance between cards
+            const x = offset * 260; // Distance between cards
             const rotateY = offset * -15;
             const opacity = isActive ? 1 : 0.5;
 
@@ -102,7 +102,7 @@ export const HorizontalCarousel: React.FC<HorizontalCarouselProps> = ({ cards })
                   damping: 30,
                   mass: 0.8,
                 }}
-                className="absolute w-[340px] md:w-[420px] h-[480px] rounded-2xl overflow-hidden cursor-pointer group"
+                className="absolute w-[300px] md:w-[360px] h-[480px] rounded-2xl overflow-hidden cursor-pointer group"
                 onClick={() => !isActive && setActiveIndex(idx)}
               >
                 <div 
@@ -124,7 +124,7 @@ export const HorizontalCarousel: React.FC<HorizontalCarouselProps> = ({ cards })
                     ))}
                   </div>
                   
-                  <h3 className="font-display text-3xl font-bold text-white mb-2" style={{ color: isActive ? card.color : '#FFF' }}>
+                  <h3 className="font-display text-2xl font-bold text-white mb-2" style={{ color: isActive ? card.color : '#FFF' }}>
                     {card.title}
                   </h3>
                   <p className="text-[#9AA4B8] text-sm md:text-base leading-relaxed mb-6 font-medium line-clamp-2">

@@ -10,6 +10,7 @@ import { Subject, Course, DailyChallenge, Badge } from '../../types';
 import { SkillTreeInteractive } from '../../components/gamification/SkillNode';
 import { DailyChallengeCard, BadgeCard } from '../../components/gamification/BadgeCard';
 import { XPBar, StreakCounterBadge } from '../../components/gamification/XPBar';
+import { SubjectCarousel } from '../../components/landing/SubjectCarousel';
 import {
   Zap,
   Play,
@@ -170,92 +171,12 @@ export const StudentDashboardPage: React.FC = () => {
           </div>
       </motion.div>
 
-      {/* Daily Challenges & Badges Grid */}
-      <motion.div variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4 } } }} className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Daily Challenges */}
-        <div className="lg:col-span-7 space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-bold text-[#F7F8FC] flex items-center gap-2">
-              <span>Daily Retrieval Targets</span>
-              <span className="rounded-full bg-[#FF6B61]/10 px-2 py-0.5 text-xs font-bold text-[#FF6B61]">
-                {challenges.filter(c => c.isCompleted).length}/{challenges.length}
-              </span>
-            </h3>
-            <span className="text-xs text-[#9AA4B8]">Resets daily</span>
-          </div>
-
-          <div className="space-y-3">
-            {challenges.map((c) => (
-              <div key={c.id} className={`flex items-center justify-between gap-4 rounded-xl border p-4 transition-all duration-300 ${
-                c.isCompleted ? 'border-green-500/30 bg-green-500/10' : 'border-[#323B4E] bg-[#11151F] hover:border-[#FF6B61]'
-              }`}>
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
-                    c.isCompleted ? 'bg-green-500/20 text-green-400' : 'bg-[#1A2030] text-[#9AA4B8]'
-                  }`}>
-                    {c.isCompleted ? <CheckCircle2 className="h-5 w-5" /> : <Target className="h-5 w-5" />}
-                  </div>
-                  <div className="min-w-0">
-                    <h5 className="text-sm font-bold text-[#F7F8FC] truncate">{c.title}</h5>
-                    <p className="text-xs text-[#9AA4B8] truncate">{c.description}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4 shrink-0">
-                  <div className="flex items-center gap-1 text-sm font-bold text-[#FF6B61]">
-                    <Zap className="h-4 w-4 fill-[#FF6B61]" />
-                    <span>+{c.xpReward} XP</span>
-                  </div>
-                  {c.isCompleted ? (
-                    <span className="text-xs font-bold text-green-400">Done</span>
-                  ) : (
-                    <button
-                      onClick={() => handleCompleteChallenge(c.id, c.xpReward)}
-                      className="flex items-center gap-1 rounded-lg bg-[#FF6B61] px-3 py-1.5 text-xs font-bold text-white hover:bg-[#FF4D5A] transition-all duration-300"
-                    >
-                      <span>Start</span>
-                      <ArrowRight className="h-3 w-3" />
-                    </button>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Recent Badges & Progression */}
-        <div className="lg:col-span-5 space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-bold text-[#F7F8FC]">Recent Achievements</h3>
-            <Link to="/app/rewards" className="text-sm text-[#FF6B61] hover:underline flex items-center gap-1 font-medium">
-              <span>View All</span>
-              <ChevronRight className="h-4 w-4" />
-            </Link>
-          </div>
-
-          <div className="space-y-3">
-            {recentBadges.map((badge) => (
-              <div
-                key={badge.id}
-                className="flex items-center justify-between rounded-xl border border-[#323B4E] bg-[#11151F] p-4 hover:shadow-sm transition-all duration-300"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#FF6B61]/10 text-[#FF6B61] border border-[#FF6B61]/30">
-                    <Award className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h5 className="text-sm font-bold text-[#F7F8FC]">{badge.title}</h5>
-                    <p className="text-xs text-[#9AA4B8] line-clamp-1">{badge.description}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-1 text-sm font-bold text-[#FF6B61]">
-                  <Zap className="h-3.5 w-3.5 fill-[#FF6B61]" />
-                  <span>+{badge.xpBonus}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+      {/* Rotating Subject Carousel */}
+      {/* Rotating Subject Carousel */}
+      <motion.div variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4 } } }}>
+        <SubjectCarousel />
       </motion.div>
+      
     </motion.div>
   );
 };
