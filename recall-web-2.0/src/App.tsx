@@ -14,8 +14,9 @@ import { AdminLayout } from './components/layout/AdminLayout';
 // Public Pages
 import { LandingPage } from './pages/public/LandingPage';
 import { SubjectsShowcasePage, HowItWorksPage } from './pages/public/SubjectsShowcasePage';
-import { ImpactPage } from './pages/public/ImpactPage';
+import { ImpactPage } from './pages/public/ImpactPage'; 
 import { SignInPage, SignUpPage, CreatorSignInPage, CreatorApplyPage } from './pages/public/AuthPages';
+import { UserSetupPage } from './pages/public/UserSetupPage';
 
 // Student Pages
 import { StudentDashboardPage, SubjectDetailsPage } from './pages/student/StudentDashboardPage';
@@ -73,7 +74,7 @@ export const App: React.FC = () => {
           <div className="relative min-h-screen bg-[#0a0c10] text-slate-100 selection:bg-lime-400 selection:text-black">
             <Routes>
               {/* Public Routes */}
-              <Route element={<PublicLayout />}>
+                            <Route element={<PublicLayout />}>
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/subjects" element={<SubjectsShowcasePage />} />
                 <Route path="/how-it-works" element={<HowItWorksPage />} />
@@ -84,6 +85,8 @@ export const App: React.FC = () => {
                 <Route path="/creator/apply" element={<CreatorApplyPage />} />
               </Route>
 
+              {/* Standalone setup page — no navbar/footer */}
+              <Route path="/setup" element={<UserSetupPage />} />
               {/* Student Portal Routes */}
               <Route path="/app" element={<StudentLayout />}>
                 <Route index element={<StudentDashboardPage />} />
