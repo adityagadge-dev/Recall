@@ -25,7 +25,6 @@ import {
   CheckCircle2,
   Target
 } from 'lucide-react';
-import { useParams } from 'react-router-dom';
 
 export const StudentDashboardPage: React.FC = () => {
   const { user } = useAuth();
@@ -75,29 +74,18 @@ export const StudentDashboardPage: React.FC = () => {
   };
 
   return (
-    <motion.div id="student-dashboard" initial="hidden" animate="visible" variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1 } } }} className="space-y-8 pb-12">
+    <motion.div id="student-dashboard" initial="hidden" animate="visible" variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1 } } }} className="space-y-6 pb-8">
       {/* Welcome Header */}
-      <motion.div variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4 } } }} className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-[#323B4E] pb-6">
+      <motion.div variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4 } } }} className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 border-b border-[#323B4E] pb-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#F7F8FC]">
+          <h2 className="text-xl sm:text-2xl font-extrabold text-[#F7F8FC]">
             Welcome back, {user?.name || 'Aria'}
-          </h1>
+          </h2>
           <p className="text-sm text-[#9AA4B8] mt-1">
             You're on a <strong className="text-[#FF6B61]">{streakDays}-day learning streak</strong>. Keep building your skills.
           </p>
         </div>
-
-        {/* Daily Goal & Streak summary */}
-        <div className="flex items-center gap-3">
-          <Link
-            to="/app/spin-teach"
-            id="dash-spin-teach-btn"
-            className="group flex items-center gap-2 rounded-2xl bg-[#11151F] border border-[#323B4E] px-5 py-2.5 text-sm font-bold text-[#F7F8FC] shadow-sm hover:border-[#FF6B61] hover:shadow-md transition-all active:scale-95"
-          >
-            <RotateCw className="h-4 w-4 text-[#0F766E] group-hover:rotate-180 transition-transform duration-500" />
-            <span>Spin & Teach (+100 XP)</span>
-          </Link>
-        </div>
+        
       </motion.div>
 
       {/* Active Course Resume Banner */}
@@ -144,21 +132,21 @@ export const StudentDashboardPage: React.FC = () => {
       )}
 
       {/* Clean Skills Overview (Replacing overly complex tree for light theme) */}
-      <motion.div variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4 } } }} className="space-y-4">
+      <motion.div variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4 } } }} className="space-y-2">
          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-bold text-[#F7F8FC]">Subject Mastery</h3>
+            <h2 className="text-md font-bold text-[#F7F8FC]">Subject Mastery</h2>
             <Link to="/app/subjects" className="text-sm text-[#FF6B61] hover:underline flex items-center gap-1 font-medium">
               <span>View Curriculum</span>
               <ChevronRight className="h-4 w-4" />
             </Link>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
              {subjects.slice(0, 4).map(sub => {
                const progress = userMasteryMock[sub.id] || 0;
                return (
                  <Link key={sub.id} style={{ transition: "transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease" }} onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-3px)"; }} onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; }} to={`/app/subjects/${sub.id}`} className="block rounded-2xl border border-[#323B4E] bg-[#11151F] p-5 hover:shadow-md hover:border-[#FF6B61] transition-all duration-300 group">
-                   <div className="flex items-center justify-between mb-4">
+                   <div className="flex items-center justify-between mb-2">
                      <span className="text-[10px] font-bold uppercase text-[#687286] tracking-wider">{sub.category}</span>
                      <span className="text-xs font-bold text-[#F7F8FC]">{progress}%</span>
                    </div>
@@ -171,8 +159,6 @@ export const StudentDashboardPage: React.FC = () => {
              })}
           </div>
       </motion.div>
-
-      {/* Rotating Subject Carousel */}
       {/* Rotating Subject Carousel */}
       <motion.div variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4 } } }}>
         <SubjectCarousel />
@@ -181,6 +167,7 @@ export const StudentDashboardPage: React.FC = () => {
     </motion.div>
   );
 };
+
 
 export const SubjectDetailsPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
