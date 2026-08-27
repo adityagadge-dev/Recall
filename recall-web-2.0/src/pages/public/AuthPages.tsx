@@ -465,25 +465,10 @@ const MockLearnerSignIn: React.FC = () => {
   const { signIn } = useAuth();
   const navigate = useNavigate();
 
-<<<<<<< HEAD
-  const handleSignIn = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    login('learner');
-    navigate('/app');
-  };
-
-  const handleSignUp = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    login('learner');
-    navigate('/setup');
-=======
   const handleSignIn = async (e: React.FormEvent, data: any) => {
     e.preventDefault();
 
     await signIn(data.email, 'learner');
-
     navigate('/app');
   };
 
@@ -491,9 +476,7 @@ const MockLearnerSignIn: React.FC = () => {
     e.preventDefault();
 
     await signIn(data.email, 'learner');
-
     navigate('/app');
->>>>>>> 6e2605c435c289c037e732fc5eb7edb2eee3342d
   };
 
   return (
