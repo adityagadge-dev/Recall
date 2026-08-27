@@ -1,26 +1,21 @@
-import React, { useState, useEffect } from "react";
-
-import CinematicIntro from "../../scenes/CinematicIntro";
-
-import HeroScene from "../../scenes/HeroScene";
-import SubjectWorldScene from "../../scenes/SubjectWorldScene";
-import RecallChallengeScene from "../../scenes/RecallChallengeScene";
-import HowItWorksScene from "../../scenes/HowItWorksScene";
-import MasteryScene from "../../scenes/MasteryScene";
-import ImpactScene from "../../scenes/ImpactScene";
-import FinalCTA from "../../scenes/FinalCTA";
-
-import DotField from "../../components/visuals/DotField";
-import Hyperspeed from "../../components/visuals/Hyperspeed";
-import { hyperspeedPresets } from "../../components/visuals/HyperSpeedPresets";
+import React, { useState, useEffect } from 'react';
+import CinematicIntro from '../../scenes/CinematicIntro';
+import HeroScene from '../../scenes/HeroScene';
+import SubjectWorldScene from '../../scenes/SubjectWorldScene';
+import RecallChallengeScene from '../../scenes/RecallChallengeScene';
+import HowItWorksScene from '../../scenes/HowItWorksScene';
+import MasteryScene from '../../scenes/MasteryScene';
+import ImpactScene from '../../scenes/ImpactScene';
+import FinalCTA from '../../scenes/FinalCTA';
+import DotField from '../../components/visuals/DotField';
+import GradientWaves from '../../components/visuals/GradientWaves';
 
 export const LandingPage: React.FC = () => {
   const [introDone, setIntroDone] = useState(false);
-  const [showHyperspeed, setShowHyperspeed] = useState(false);
   const [hasSeenLoader, setHasSeenLoader] = useState(false);
 
   useEffect(() => {
-    const seen = sessionStorage.getItem("hasSeenRecallIntro");
+    const seen = sessionStorage.getItem('hasSeenRecallIntro');
 
     if (seen) {
       setHasSeenLoader(true);
@@ -28,68 +23,62 @@ export const LandingPage: React.FC = () => {
     }
   }, []);
 
-  useEffect(() => {
-    if (showHyperspeed) {
-      const timer = setTimeout(() => {
-        setShowHyperspeed(false);
-        setIntroDone(true);
-
-        sessionStorage.setItem(
-          "hasSeenRecallIntro",
-          "true"
-        );
-      }, 2500);
-
-      return () => clearTimeout(timer);
-    }
-  }, [showHyperspeed]);
-
   const handleIntroComplete = () => {
-    setShowHyperspeed(true);
+    setIntroDone(true);
+    sessionStorage.setItem('hasSeenRecallIntro', 'true');
   };
 
   return (
     <>
-      {/* CINEMATIC INTRO */}
-      {!hasSeenLoader &&
-        !showHyperspeed &&
-        !introDone && (
-          <CinematicIntro
-            onComplete={handleIntroComplete}
-          />
-        )}
-
-      {/* HYPERSPEED TRANSITION */}
-      {!hasSeenLoader && showHyperspeed && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 9999,
-            background: "#050507",
-          }}
-        >
-          <Hyperspeed
-            effectOptions={hyperspeedPresets.one}
-          />
-        </div>
+      {!hasSeenLoader && !introDone && (
+        <CinematicIntro onComplete={handleIntroComplete} />
       )}
 
-      {/* MAIN WEBSITE */}
       {introDone && (
         <>
-          {/* Background */}
           <div
             style={{
-              position: "fixed",
+              position: 'fixed',
               inset: 0,
               zIndex: 0,
-              pointerEvents: "none",
+              pointerEvents: 'none',
             }}
           >
+            {/* LANDING PAGE WAVE BACKGROUND */}
             <div
               style={{
-                position: "absolute",
+                position: 'absolute',
+                inset: 0,
+                opacity: 0.6,
+              }}
+            >
+              <GradientWaves
+                horizonColor="#5227FF"
+                waveColor="#FF9FFC"
+                crestColor="#FFFFFF"
+                speed={0.4}
+                amplitude={2.5}
+                waveScale={0.6}
+                waveRatio={0.9}
+                swell={35}
+                turbulence={20}
+                tilt={1.11}
+                zoom={1}
+                height={5.5}
+                fogDepth={15}
+                detail="medium"
+                brightness={1.3}
+                opacity={1}
+                grain
+                grainIntensity={0.05}
+                parallaxStrength={0.5}
+              />
+            </div>
+
+            {/* DOT BACKGROUND */}
+            <div
+              style={{
+                position: 'absolute',
                 inset: 0,
                 opacity: 0.8,
               }}
@@ -111,36 +100,31 @@ export const LandingPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Page Content */}
+          {/* PAGE CONTENT */}
           <div
             style={{
-              position: "relative",
+              position: 'relative',
               zIndex: 10,
             }}
           >
+            {/* ORIGINAL DARK GRADIENT FADE */}
             <div
               style={{
-                position: "absolute",
+                position: 'absolute',
                 inset: 0,
-                pointerEvents: "none",
+                pointerEvents: 'none',
                 zIndex: -1,
                 background:
-                  "linear-gradient(to bottom, rgba(7,8,12,0) 0%, rgba(7,8,12,0.2) 15%, rgba(7,8,12,0.6) 40%, rgba(7,8,12,0.85) 70%, rgba(7,8,12,0.92) 100%)",
+                  'linear-gradient(to bottom, rgba(7,8,12,0) 0%, rgba(7,8,12,0.2) 15%, rgba(7,8,12,0.6) 40%, rgba(7,8,12,0.85) 70%, rgba(7,8,12,0.92) 100%)',
               }}
             />
 
             <HeroScene />
-
             <SubjectWorldScene />
-
             <RecallChallengeScene />
-
             <HowItWorksScene />
-
             <MasteryScene />
-
             <ImpactScene />
-
             <FinalCTA />
           </div>
         </>

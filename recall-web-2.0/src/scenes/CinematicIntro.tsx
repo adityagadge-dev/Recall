@@ -17,7 +17,7 @@ export default function CinematicIntro({
   onComplete,
 }: IntroProps) {
   const [phase, setPhase] = useState<
-    "boot" | "glitch" | "zoom" | "complete"
+    "boot" | "glitch" | "complete"
   >("boot");
 
   const [bootTextIndex, setBootTextIndex] = useState(0);
@@ -32,7 +32,7 @@ export default function CinematicIntro({
 
           setTimeout(() => {
             setPhase("glitch");
-          }, 400);
+          }, 450);
 
           return i;
         }
@@ -50,18 +50,10 @@ export default function CinematicIntro({
   useEffect(() => {
     if (phase === "glitch") {
       const timer = setTimeout(() => {
-        setPhase("zoom");
-      }, 1200);
-
-      return () => clearTimeout(timer);
-    }
-
-    if (phase === "zoom") {
-      const timer = setTimeout(() => {
         setPhase("complete");
-        onComplete();
         document.body.style.overflow = "auto";
-      }, 800);
+        onComplete();
+      }, 1500);
 
       return () => clearTimeout(timer);
     }
@@ -72,85 +64,51 @@ export default function CinematicIntro({
   }
 
   return (
-    <motion.div
-      className="intro-gamified"
-      animate={{
-        opacity: phase === "zoom" ? 0 : 1,
-      }}
-      transition={{
-        duration: phase === "zoom" ? 0.8 : 0.2,
-        ease: "easeInOut",
-      }}
-    >
+    <div className="intro-gamified">
       <div className="intro-gamified__crt" />
 
       <AnimatePresence mode="wait">
+        {/* BOOT SEQUENCE */}
         {phase === "boot" && (
           <motion.div
             key="boot"
             className="intro-gamified__boot text-game"
-            initial={{
-              opacity: 0,
-              y: 10,
-            }}
-            animate={{
-              opacity: 1,
-              y: 0,
-            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             exit={{
               opacity: 0,
-              scale: 1.08,
-              filter: "blur(6px)",
+              filter: "blur(4px)",
             }}
             transition={{
-              duration: 0.3,
+              duration: 0.25,
             }}
           >
-            {DECODE_TEXT.slice(
-              0,
-              bootTextIndex + 1
-            ).map((text, i) => (
-              <p key={i}>{text}</p>
-            ))}
+            {DECODE_TEXT
+              .slice(0, bootTextIndex + 1)
+              .map((text, i) => (
+                <p key={i}>{text}</p>
+              ))}
 
             <span className="intro-gamified__cursor" />
           </motion.div>
         )}
 
-        {(phase === "glitch" ||
-          phase === "zoom") && (
+        {/* RECALL */}
+        {phase === "glitch" && (
           <motion.div
             key="glitch"
             className="intro-gamified__glitch-container"
             initial={{
-              scale: 0.8,
-              opacity: 0,
-              filter: "blur(8px)",
+              opacity: 1,
             }}
-            animate={
-              phase === "zoom"
-                ? {
-                    scale: 12,
-                    opacity: 0,
-                    filter: "blur(12px)",
-                  }
-                : {
-                    scale: 1,
-                    opacity: 1,
-                    filter: "blur(0px)",
-                  }
-            }
-            transition={
-              phase === "zoom"
-                ? {
-                    duration: 0.8,
-                    ease: [0.64, 0.04, 0.35, 1],
-                  }
-                : {
-                    duration: 0.5,
-                    ease: [0.16, 1, 0.3, 1],
-                  }
-            }
+            animate={{
+              opacity: [1, 1, 1, 0.8, 0],
+            }}
+            transition={{
+              duration: 1.5,
+              times: [0, 0.75, 0.85, 0.94, 1],
+              ease: "linear",
+            }}
           >
             <div
               className="intro-gamified__glitch-text heading-display"
@@ -161,6 +119,6 @@ export default function CinematicIntro({
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </div>
   );
 }
